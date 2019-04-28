@@ -1,33 +1,46 @@
 'use strict';
 
-var budget = +prompt("Ваш бюджет на месяц?", "");
+let money, time;
 
-var date = prompt("Введите дату в формате YYYY-MM-DD");
+function start(){
+    money = +prompt("Ваш бюджет на месяц?", "");
+    time = prompt("Введите дату в формате YYYY-MM-DD");
+
+    while(isNaN(money) || money == "" || money == null) {
+        money = +prompt("Ваш бюджет на месяц?", "");
+    }
+}
+
+start();
 
 var income = [];
 
 let appData = {
-    budg: budget, 
-    time: date,
+    budg: money, 
+    time: time,
     expenses: {}, 
     optExp: {},
     moreExp: income,
-    savings: false
+    savings: true
 }
 
-for (let i = 0; i < 2; i++)
-{
-    let a = prompt("Введите обязательную статью расходов в этом месяце ", ' '),
-        b = prompt("Во сколько обойдется", ' ');
-    if ( (typeof(a)) === 'string' && (typeof(a)) != null && (typeof(b)) != null
-        && a != '' && b != '' && a.length < 50)  {
-        appData.expenses[a] = b; 
-    }else {
+function chooseExpenses() {
+    for (let i = 0; i < 2; i++)
+    {
+        let a = prompt("Введите обязательную статью расходов в этом месяце ", ' '),
+            b = prompt("Во сколько обойдется", ' ');
+        if ( (typeof(a)) === 'string' && (typeof(a)) != null && (typeof(b)) != null
+            && a != '' && b != '' && a.length < 50)  {
+            appData.expenses[a] = b; 
+        }else {
+            i = i - 1;
+        }
+    };
+}
 
-    }
-};
+chooseExpenses();
 
-appData.moneyPerDay = appData.budg / 30;
+appData.moneyPerDay = (appData.budg / 30).toFixed(1);
 
 alert("Ежедневный бюджет: " + appData.moneyPerDay);
 
@@ -41,4 +54,15 @@ if(appData.moneyPerDay < 100){
     console.log("Произошла ошибка");
 }
 
-console.log(appData);
+function checkSavings() {
+    if(appData.savings == true)
+    {
+        let save = +prompt("Какова сумма накоплений", "");
+        let percent = +prompt("Под какой процент?", "");
+
+        appData.monthIncome = save / 100 / 12 *percent;
+        alert("доход в месяц с вашего депозита: " + appData.monthIncome);
+    }
+}
+
+checkSavings();
